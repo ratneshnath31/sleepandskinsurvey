@@ -1,0 +1,129 @@
+@page "/skinsurvey"
+@using BlazorMediLab.Services
+@using DataAccessLibrary.Models
+@inject NavigationManager Navigation
+@inject SurveyService SurveyService
+@inject DataAccessLibrary.Data.NikayaDBContext Db
+
+<h3>Skin Health Survey</h3>
+
+@if (currentQuestion != null)
+{
+    <div class="question-box">
+        <p><strong>@currentQuestion.Question</strong></p>
+
+        @foreach (var option in currentQuestion.Options)
+        {
+            <div>
+                <input type="checkbox"
+                    @onclick="() => ToggleOption(currentQuestion, option, currentQuestion.SelectedAnswers.Contains(option))"
+                    checked="@currentQuestion.SelectedAnswers.Contains(option)" />
+                <label>@option</label>
+            </div>
+        }
+        <p><strong>Debug Index:</strong> @questionIndex</p>
+        <p><strong>Selected Answers:</strong> @string.Join(", ", currentQuestion?.SelectedAnswers ?? new List<string>())</p>
+
+
+        <div class="buttons mt-3">
+            @if (questionIndex > 0)
+            {
+                <button @onclick="GoBack">Back</button>
+            }
+            @if (questionIndex < questions.Count - 1)
+            {
+                <button @onclick="GoNext">Next</button>
+            }
+            else
+            {
+                <button @onclick="SubmitSurvey" type="button"
+                    disabled="@(currentQuestion.SelectedAnswers.Count == 0)">Submit</button>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading questions...</p>
+}
+
+@code {
+    private List<SkinSurveyQuestion> questions = new();
+    private int questionIndex = 0;
+    private SkinSurveyQuestion? currentQuestion;
+
+    protected override void OnInitialized()
+    {
+        if (questions.Count > 0)
+            return; // Already initialized
+
+        Console.WriteLine("== OnInitialized called ==");
+        questions = SurveyService.GetSkinSurveyQuestions();
+        currentQuestion = questions[questionIndex];
+        Console.WriteLine($"Loaded {questions.Count} questions.");
+    }
+
+
+    private void GoNext()
+    {
+        Console.WriteLine($"[GoNext] Button Clicked — Current Index: {questionIndex}");
+        if (questionIndex < questions.Count - 1)
+        {
+            questionIndex++;
+            currentQuestion = questions[questionIndex];
+            Console.WriteLine($"[GoNext] Moved to Index: {questionIndex}");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("[GoNext] Already at last question.");
+        }
+    }
+
+
+
+    private void GoBack()
+    {
+        Console.WriteLine($"GoBack clicked. Current index: {questionIndex}");
+        if (questionIndex > 0)
+        {
+            questionIndex--;
+            currentQuestion = questions[questionIndex];
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleOption(SkinSurveyQuestion question, string option, object? checkedValue)
+    {
+        bool isChecked = Convert.ToBoolean(checkedValue);
+        if (isChecked)
+        {
+            if (!question.SelectedAnswers.Contains(option))
+                question.SelectedAnswers.Add(option);
+        }
+        else
+        {
+            question.SelectedAnswers.Remove(option);
+        }
+
+        Console.WriteLine($"Option toggled: {option} => {isChecked}");
+    }
+
+
+    private async Task SubmitSurvey()
+    {
+        var response = new SkinSurveyResponse
+        {
+            SkinType = string.Join(", ", questions.FirstOrDefault(q => q.Id == 0)?.SelectedAnswers ?? new List<string>()),
+            SkinConcerns = string.Join(", ", questions.FirstOrDefault(q => q.Id == 1)?.SelectedAnswers ?? new List<string>()),
+            ProductsUsed = string.Join(", ", questions.FirstOrDefault(q => q.Id == 2)?.SelectedAnswers ?? new List<string>()),
+            AgeGroup = string.Join(", ", questions.FirstOrDefault(q => q.Id == 3)?.SelectedAnswers ?? new List<string>())
+
+        };
+
+        Db.SkinSurveyResponses.Add(response);
+        await Db.SaveChangesAsync();
+
+        Navigation.NavigateTo("/thank-you");
+    }
+}

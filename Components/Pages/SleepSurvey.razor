@@ -1,0 +1,88 @@
+@page "/sleepsurvey"
+@inject NikayaDBContext Db
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using DataAccessLibrary.Models
+@using DataAccessLibrary.Data
+
+<h3>Sleep Quality Survey</h3>
+
+@if (form == null)
+{
+    <p>Loading survey questions...</p>
+}
+else
+{
+    <EditForm Model="@form" OnValidSubmit="HandleValidSubmit" FormName="SleepSurveyForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        @for (int i = 0; i < form.Responses.Count; i++)
+        {
+            var question = form.Responses[i];
+
+            <div class="mb-4">
+                <p><strong>@question.QuestionText</strong></p>
+                <InputRadioGroup TValue="string" @bind-Value="question.Answer">
+                    @foreach (var opt in options)
+                    {
+                        <label class="me-3">
+                            <InputRadio TValue="string" Value="@opt" /> @opt
+                        </label>
+                    }
+                </InputRadioGroup>
+            </div>
+        }
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </EditForm>
+}
+
+@if (submitted)
+{
+    <p class="text-success">Thank you. Your responses are recorded.</p>
+}
+
+@code {
+    private SurveyForm? form = null;
+    private bool submitted = false;
+
+    private readonly string[] options = { "Rarely", "Sometimes", "Often", "Almost always" };
+
+    protected override void OnInitialized()
+    {
+        if (SurveyQuestions.Questions == null || !SurveyQuestions.Questions.Any())
+        {
+            Console.WriteLine("Survey questions not found!");
+            return;
+        }
+
+        var responses = SurveyQuestions.Questions
+        .Select((question, index) => new SleepSurveyResponse
+        {
+            QuestionNumber = index + 1,
+            QuestionText = question
+        })
+        .ToList();
+
+        form = new SurveyForm
+        {
+            Responses = responses
+        };
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (form == null) return;
+
+        foreach (var r in form.Responses)
+        {
+            Console.WriteLine($"Saving Q{r.QuestionNumber}: {r.Answer}");
+
+        }
+
+        Db.SleepSurveyResponses.AddRange(form.Responses);
+        await Db.SaveChangesAsync();
+        submitted = true;
+    }
+}
