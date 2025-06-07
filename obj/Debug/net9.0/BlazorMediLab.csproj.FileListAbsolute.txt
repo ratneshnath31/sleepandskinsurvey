@@ -309,3 +309,4 @@
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.pdb
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.genruntimeconfig.cache
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/ref/BlazorMediLab.dll
+/Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.sourcelink.json
