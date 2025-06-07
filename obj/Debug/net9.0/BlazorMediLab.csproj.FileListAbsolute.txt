@@ -309,4 +309,17 @@
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.pdb
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.genruntimeconfig.cache
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/ref/BlazorMediLab.dll
+<<<<<<< HEAD
 /Users/ratneshnath/Downloads/Nikaya-Skin/BlazorMediLab/obj/Debug/net9.0/BlazorMediLab.sourcelink.json
+=======
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.csproj.AssemblyReference.cache
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.GeneratedMSBuildEditorConfig.editorconfig
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.AssemblyInfoInputs.cache
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.AssemblyInfo.cs
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.csproj.CoreCompileInputs.cache
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.MvcApplicationPartsAssemblyInfo.cache
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.sourcelink.json
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.dll
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/refint/BlazorMediLab.dll
+/Users/shicky/sleepandskinsurvey/obj/Debug/net9.0/BlazorMediLab.pdb
+>>>>>>> refs/remotes/origin/master
